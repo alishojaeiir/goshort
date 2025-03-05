@@ -1,0 +1,32 @@
+main:
+
+server:
+  port: 8088
+  cors:
+    allow_origins: "*"
+  shutdown_context_timeout: "10s"
+
+db:
+  driver: postgres
+  host: staging-db
+  port: 5432
+  username: "goShort_admin"
+  password: "password123"
+  db_name: staging_db
+  ssl_mode: disable
+  max_idle_conns: 15
+  max_open_conns: 100
+  conn_max_lifetime: 5
+  path_of_migration: './repository/migrations'
+
+cache:
+  cache_enabled: true
+  driver: redis
+  host: cache
+  port: 6379
+
+logger:
+  file_path: "logs/staging.log"
+  use_local_time: true
+  file_max_size_in_mb: 10
+  file_max_age_in_days: 7
