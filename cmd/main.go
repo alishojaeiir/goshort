@@ -6,6 +6,8 @@ import (
 	"github.com/alishojaeiir/GoShort/config"
 	"github.com/alishojaeiir/GoShort/internal"
 	cfgloader "github.com/alishojaeiir/GoShort/pkg/cfg_loader"
+	"github.com/alishojaeiir/GoShort/pkg/logger"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -28,12 +30,17 @@ func main() {
 	}
 
 	if err := cfgloader.Load(options, &cfg); err != nil {
-		fmt.Sprintln("Failed to load config: %v", err)
+		log.Fatalf("Failed to load food config: %v", err)
 	}
+
+	// Initialize logger
+	logger.Init(cfg.Logger)
+	goShortLogger := logger.L()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	app := internal.Setup(ctx, cfg)
+	goShortLogger.Info("The application is set up.")
 	app.Start()
 }
