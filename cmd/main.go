@@ -6,6 +6,7 @@ import (
 	"github.com/alishojaeiir/GoShort/config"
 	"github.com/alishojaeiir/GoShort/internal"
 	cfgloader "github.com/alishojaeiir/GoShort/pkg/cfg_loader"
+	"github.com/alishojaeiir/GoShort/pkg/database"
 	"github.com/alishojaeiir/GoShort/pkg/logger"
 	"log"
 	"os"
@@ -36,6 +37,21 @@ func main() {
 	// Initialize logger
 	logger.Init(cfg.Logger)
 	goShortLogger := logger.L()
+
+	conn, cnErr := database.Connect(cfg.Database)
+	if cnErr != nil {
+		goShortLogger.Error(cnErr.Error())
+	}
+
+	defer database.Close(conn.DB)
+
+	// Check example query to ensure that db works correctly
+	res, exErr := database.ExampleQuery(conn.DB)
+	if exErr != nil {
+		goShortLogger.Error(exErr.Error())
+	} else {
+		fmt.Printf("The version of database is: %s\n", res)
+	}
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
