@@ -45,14 +45,6 @@ func main() {
 
 	defer database.Close(conn.DB)
 
-	// Check example query to ensure that db works correctly
-	res, exErr := database.ExampleQuery(conn.DB)
-	if exErr != nil {
-		goShortLogger.Error(exErr.Error())
-	} else {
-		fmt.Printf("The version of database is: %s\n", res)
-	}
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
